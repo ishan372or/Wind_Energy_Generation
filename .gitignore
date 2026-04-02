@@ -8,3 +8,5 @@ mlflow/
 node_modules/
 dist/
 .vite/
+.vscode/
+.zen/
