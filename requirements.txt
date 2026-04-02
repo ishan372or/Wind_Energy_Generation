@@ -1,0 +1,16 @@
+scikit-learn
+numpy
+pandas
+matplotlib
+seaborn
+tensorflow
+keras
+flask
+requests
+dvc
+docker
+mlflow
+zenml
+xgboost
+lightgbm
+catboost

@@ -1,0 +1,36 @@
+.we-header {
+  padding: 1.5rem 0 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.we-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.we-header-title {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 650;
+  color: #0f172a;
+}
+
+.we-header-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .we-header {
+    padding-top: 1rem;
+  }
+
+  .we-header-title {
+    font-size: 1.4rem;
+  }
+}
+
+
