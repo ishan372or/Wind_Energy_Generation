@@ -4,7 +4,6 @@ pandas
 flask
 requests
 mlflow
-zenml==0.66.0
 xgboost
 lightgbm
 joblib
