@@ -1,26 +1,23 @@
 import sys
 import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from flask import Flask, jsonify, request
 from pipelines.training_pipeline import training_pipeline
 from pipelines.monthly_update_pipeline import monthly_update
 import logging
 import mlflow
-import sqlite3
+import psycopg2
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
 import dagshub
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 logging.basicConfig(level=logging.INFO)
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
-PROJECT_ROOT = os.path.dirname(BASE_DIR)               
-DB_PATH = os.path.join(PROJECT_ROOT, "src" , "predictions.db")
+DB_URL= os.getenv("DATABASE_URL")
 
 STATES = [
     "California", "Colorado", "Illinois", "Iowa", "Kansas",
@@ -29,26 +26,26 @@ STATES = [
 MODELS = ["XGBoost", "LightGBM"]
  
 WEATHER_PATHS = {
-    "California":   r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\California weather.csv",
-    "Colorado":     r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\colorado weather.csv",
-    "Illinois":     r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Illinois weather.csv",
-    "Iowa":         r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Iowa weather.csv",
-    "Kansas":       r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\kansas weather.csv",
-    "Minnesota":    r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Minnesota weather.csv",
-    "North Dakota": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\North Dakota weather.csv",
-    "Oklahoma":     r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Oklahoma weather.csv",
-    "Texas":        r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Texas weather.csv",
-    "Washington":   r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Washington weather.csv",
+    "California": os.getenv("WEATHER_PATH_CA"),
+    "Colorado": os.getenv("WEATHER_PATH_CO"),
+    "Illinois": os.getenv("WEATHER_PATH_IL"),
+    "Iowa": os.getenv("WEATHER_PATH_IA"),
+    "Kansas": os.getenv("WEATHER_PATH_KS"),
+    "Minnesota": os.getenv("WEATHER_PATH_MN"),
+    "North Dakota": os.getenv("WEATHER_PATH_ND"),
+    "Oklahoma": os.getenv("WEATHER_PATH_OK"),
+    "Texas": os.getenv("WEATHER_PATH_TX"),
+    "Washington": os.getenv("WEATHER_PATH_WA"),
 }
  
-ENERGY_PATH = r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\Net_Energy_Generation\Top 10 States net Generation.csv"
+ENERGY_PATH = os.getenv("ENERGY_PATH", "raw/Net_Energy_Generation/Top 10 States net Generation.csv")
 
 def run_training():
     try:
         logging.info("Starting training pipeline")
         dagshub.init(
-            repo_owner="ishan372or",
-            repo_name="Wind_Energy_Prediction_end_to_end",
+            repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
+            repo_name=os.getenv("DAGSHUB_REPO_NAME"),
             mlflow=True
         )
         training_pipeline(
@@ -63,8 +60,8 @@ def monthly_update():
     try:
         logging.info("Monthly update triggered")
         dagshub.init(
-            repo_owner="ishan372or",
-            repo_name="Wind_Energy_Prediction_end_to_end",
+            repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
+            repo_name=os.getenv("DAGSHUB_REPO_NAME"),
             mlflow=True
         )
         monthly_update()
@@ -88,10 +85,10 @@ def get_forecast():
         return jsonify({"error": f"Invalid model '{model_name}'. Choose from: {MODELS}"}), 400
     
     try:
-        conn=sqlite3.connect(DB_PATH)
-        conn.row_factory= sqlite3.Row
+        conn=psycopg2.connect(DB_PATH)
+        conn.row_factory= psycopg2.Row
         
-        rows= conn.execute("""SELECT month,predicted,actual FROM predictions WHERE state=? AND model_name=? ORDER BY month ASC""",(state,model_name)).fetchall()
+        rows= conn.execute("""SELECT month,predicted,actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""",(state,model_name)).fetchall()
         
         conn.close()
         
