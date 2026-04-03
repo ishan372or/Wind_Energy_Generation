@@ -21,7 +21,7 @@ STATE_MAP = {
     "WA": "Washington",
 }
 
-ENERGY_PATH=r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\Net_Energy_Generation\Top 10 States net Generation.csv"
+ENERGY_PATH = os.getenv("ENERGY_PATH", "raw/Net_Energy_Generation/Top 10 States net Generation.csv")
 
 @step
 def fetch_energy_data():

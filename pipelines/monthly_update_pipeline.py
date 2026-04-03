@@ -8,21 +8,26 @@ from src.data_preprocessing import add_lag_features_step
 from src.store_predictions import predict_and_store
 from src.load_models import load_models
 import mlflow.sklearn
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 STATE_PATH_MAP = {
-    "CA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\California weather.csv",
-    "CO": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\colorado weather.csv",
-    "IL": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Illinois weather.csv",
-    "IA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Iowa weather.csv",
-    "KS": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\kansas weather.csv",
-    "MN": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Minnesota weather.csv",
-    "ND": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\North Dakota weather.csv",
-    "OK": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Oklahoma weather.csv",
-    "TX": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Texas weather.csv",
-    "WA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Washington weather.csv",
+    "CA": os.getenv("WEATHER_PATH_CA"),
+    "CO": os.getenv("WEATHER_PATH_CO"),
+    "IL": os.getenv("WEATHER_PATH_IL"),
+    "IA": os.getenv("WEATHER_PATH_IA"),
+    "KS": os.getenv("WEATHER_PATH_KS"),
+    "MN": os.getenv("WEATHER_PATH_MN"),
+    "ND": os.getenv("WEATHER_PATH_ND"),
+    "OK": os.getenv("WEATHER_PATH_OK"),
+    "TX": os.getenv("WEATHER_PATH_TX"),
+    "WA": os.getenv("WEATHER_PATH_WA"),
 }
 
-COORDINATE_MAP = {
+
+COORDINATE_MAP= {
     "CA": [36.5328,  -119.2702],
     "CO": [39.0523,  -105.7821],
     "IL": [40.6331,   -89.3985],
@@ -58,7 +63,7 @@ STATE_MAP = {
     "WA": "Washington",
 }
 
-ENERGY_PATH=r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\Net_Energy_Generation\Top 10 States net Generation.csv"
+ENERGY_PATH = os.getenv("ENERGY_PATH", "raw/Net_Energy_Generation/Top 10 States net Generation.csv")
 
 @pipeline
 def monthly_update(weather_paths:dict[str, str],energy_path:str):

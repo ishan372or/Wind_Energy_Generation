@@ -1,10 +1,11 @@
-import sqlite3
+import psycopg2
 import pandas as pd
 import os
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
-PROJECT_ROOT = os.path.dirname(BASE_DIR)                
-DB_PATH = os.path.join(PROJECT_ROOT, "src", "predictions.db")
+load_dotenv()
+
+DB_URL=os.getenv("DATABASE_URL")
 
 ENERGY_PATH= r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\Net_Energy_Generation\Top 10 States net Generation.csv"
 
@@ -14,9 +15,10 @@ df["Region"] = df["Region"].str.split(":").str[0].str.strip()
 df["Month_Year"] = pd.to_datetime(df["Month_Year"], format="%b %Y", errors="coerce")
 df = df[df["Month_Year"] >= "2023-01-01"]
 
-conn=sqlite3.connect(DB_PATH)
+conn=psycopg2.connect(DB_URL)
+cursor= conn.cursor()
 
-conn.execute("""
+cursor.execute("""
     CREATE TABLE IF NOT EXISTS predictions (
         state TEXT,
         month TEXT,
@@ -29,8 +31,8 @@ conn.execute("""
 count = 0
 for _, row in df.iterrows():
     for model_name in ["XGBoost", "LightGBM"]:
-        conn.execute(
-            "INSERT INTO predictions VALUES (?, ?, ?, ?, ?)",
+        cursor.execute(
+            "INSERT INTO predictions VALUES (%s, %s, %s, %s, %s)",
             (
                 str(row["Region"]),
                 row["Month_Year"].strftime("%Y-%m"),
@@ -42,5 +44,6 @@ for _, row in df.iterrows():
         count += 1
 
 conn.commit()
+cursor.close()
 conn.close()
 print(f"Done! Seeded {count} rows")

@@ -2,7 +2,7 @@ from zenml import step
 import pandas as pd
 import logging
 import joblib
-import sqlite3
+import psycopg
 import os
  
 @step
@@ -11,21 +11,21 @@ def predict_and_store(
     lgb_model,
     df: pd.DataFrame
 ):
-    preprocessor = joblib.load("preprocessor.pkl")
-    DB_PATH = os.path.join(os.getcwd(), "src", "predictions.db")
-    conn = sqlite3.connect(DB_PATH)
- 
+    preprocessor= joblib.load("preprocessor.pkl")
+    DB_URL= os.getenv("DATABASE_URL")
+    conn = psycopg.connect(DB_URL)
+    cursor= conn.cursor()
+    
     test_df = df[df["Month_Year"] >= "2023-01-01"]
  
     try:
-        already_stored = pd.read_sql(
-            "SELECT DISTINCT month, state, model_name FROM predictions WHERE predicted IS NOT NULL", conn
+        cursor.execute(
+            "SELECT DISTINCT month, state, model_name FROM predictions WHERE predicted IS NOT NULL"
         )
-        stored_pairs = set(
-            zip(already_stored["month"], already_stored["state"], already_stored["model_name"])
-        )
+        rows= cursor.fetchall()
+        stored_pairs= set(rows)  
     except:
-        stored_pairs = set() 
+        stored_pairs = set()
  
     for model, model_name in [(xgb_model, "XGBoost"), (lgb_model, "LightGBM")]:
         for _, row in test_df.iterrows():
@@ -41,11 +41,12 @@ def predict_and_store(
             actual = float(row["Net_Generation_MWh"])  
             conn.execute("""
                 UPDATE predictions
-                SET predicted = ?
-                WHERE state = ? AND month = ? AND model_name = ? AND predicted IS NULL
+                SET predicted = %s
+                WHERE state = %s AND month = %s AND model_name = %s AND predicted IS NULL
             """, (pred, state, month, model_name))
             conn.commit()
  
             logging.info(f"Stored {model_name} prediction for {state} {month}")
- 
+    
+    cursor.close()
     conn.close()

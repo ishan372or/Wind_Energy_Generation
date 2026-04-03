@@ -4,18 +4,22 @@ import pandas as pd
 import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 STATE_PATH_MAP = {
-    "CA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\California weather.csv",
-    "CO": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\colorado weather.csv",
-    "IL": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Illinois weather.csv",
-    "IA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Iowa weather.csv",
-    "KS": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\kansas weather.csv",
-    "MN": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Minnesota weather.csv",
-    "ND": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\North Dakota weather.csv",
-    "OK": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Oklahoma weather.csv",
-    "TX": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Texas weather.csv",
-    "WA": r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\weather\Washington weather.csv",
+    "CA": os.getenv("WEATHER_PATH_CA"),
+    "CO": os.getenv("WEATHER_PATH_CO"),
+    "IL": os.getenv("WEATHER_PATH_IL"),
+    "IA": os.getenv("WEATHER_PATH_IA"),
+    "KS": os.getenv("WEATHER_PATH_KS"),
+    "MN": os.getenv("WEATHER_PATH_MN"),
+    "ND": os.getenv("WEATHER_PATH_ND"),
+    "OK": os.getenv("WEATHER_PATH_OK"),
+    "TX": os.getenv("WEATHER_PATH_TX"),
+    "WA": os.getenv("WEATHER_PATH_WA"),
 }
 
 COORDINATE_MAP = {
