@@ -2,11 +2,10 @@ import sys
 import os
 from flask import Flask, jsonify, request
 import logging
-import mlflow
 import psycopg2
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
-import dagshub
+from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -41,9 +40,9 @@ def get_forecast():
     
     try:
         conn=psycopg2.connect(DB_URL)
-        conn.row_factory= psycopg2.Row
+        cursor= conn.cursor(cursor_factory=RealDictCursor)
         
-        rows= conn.execute("""SELECT month,predicted,actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""",(state,model_name)).fetchall()
+        rows= cursor.execute("""SELECT month,predicted,actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""",(state,model_name)).fetchall()
         
         conn.close()
         
@@ -70,5 +69,6 @@ def get_forecast():
         logging.error(f"Error fetching forecast for {state}: {e}")
         return jsonify({"error": str(e)}), 500
     
-if __name__=="__main__":
-    app.run(debug=True,port=5000)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
