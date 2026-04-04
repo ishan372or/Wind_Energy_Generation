@@ -7,5 +7,5 @@ mlflow
 xgboost
 lightgbm
 joblib
-psycopg-binary
+psycopg2-binary
 gunicorn

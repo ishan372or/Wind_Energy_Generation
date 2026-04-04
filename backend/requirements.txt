@@ -1,0 +1,16 @@
+flask
+flask-cors
+gunicorn
+psycopg2-binary
+apscheduler
+python-dotenv
+requests
+pandas
+numpy
+dagshub
+mlflow
+scikit-learn
+xgboost
+lightgbm
+joblib
+python-dateutil
