@@ -3,7 +3,6 @@ import os
 from flask import Flask, jsonify, request
 import logging
 import psycopg2
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv

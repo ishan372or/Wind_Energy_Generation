@@ -2,7 +2,6 @@ flask
 flask-cors
 gunicorn
 psycopg2-binary
-apscheduler
 python-dotenv
 requests
 pandas
