@@ -14,18 +14,17 @@ import os
 load_dotenv()
 
 STATE_PATH_MAP = {
-    "CA": os.getenv("WEATHER_PATH_CA"),
-    "CO": os.getenv("WEATHER_PATH_CO"),
-    "IL": os.getenv("WEATHER_PATH_IL"),
-    "IA": os.getenv("WEATHER_PATH_IA"),
-    "KS": os.getenv("WEATHER_PATH_KS"),
-    "MN": os.getenv("WEATHER_PATH_MN"),
-    "ND": os.getenv("WEATHER_PATH_ND"),
-    "OK": os.getenv("WEATHER_PATH_OK"),
-    "TX": os.getenv("WEATHER_PATH_TX"),
-    "WA": os.getenv("WEATHER_PATH_WA"),
+    "CA": "raw/weather/California weather.csv",
+    "CO": "raw/weather/colorado weather.csv",
+    "IL": "raw/weather/Illinois weather.csv",
+    "IA": "raw/weather/Iowa weather.csv",
+    "KS": "raw/weather/kansas weather.csv",
+    "MN": "raw/weather/Minnesota weather.csv",
+    "ND": "raw/weather/North Dakota weather.csv",
+    "OK": "raw/weather/Oklahoma weather.csv",
+    "TX": "raw/weather/Texas weather.csv",
+    "WA": "raw/weather/Washington weather.csv",
 }
-
 
 COORDINATE_MAP= {
     "CA": [36.5328,  -119.2702],

@@ -1,0 +1,31 @@
+name: Yearly Wind Energy Update
+
+on:
+  schedule:
+    - cron: '0 0 2 1 *'
+  workflow_dispatch:       
+
+jobs:
+  run-yearly-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run yearly update pipeline
+        env:
+          DATABASE_URL:           ${{ secrets.DATABASE_URL }}
+          EIA_API_KEY:            ${{ secrets.EIA_API_KEY }}
+          DAGSHUB_REPO_OWNER:     ${{ secrets.DAGSHUB_REPO_OWNER }}
+          DAGSHUB_REPO_NAME:      ${{ secrets.DAGSHUB_REPO_NAME }}
+          DAGSHUB_TOKEN:          ${{ secrets.DAGSHUB_TOKEN }}
+        run: python run_yearly_update.py

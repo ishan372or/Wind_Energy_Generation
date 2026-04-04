@@ -26,35 +26,19 @@ STATES = [
 MODELS = ["XGBoost", "LightGBM"]
  
 WEATHER_PATHS = {
-    "California": os.getenv("WEATHER_PATH_CA"),
-    "Colorado": os.getenv("WEATHER_PATH_CO"),
-    "Illinois": os.getenv("WEATHER_PATH_IL"),
-    "Iowa": os.getenv("WEATHER_PATH_IA"),
-    "Kansas": os.getenv("WEATHER_PATH_KS"),
-    "Minnesota": os.getenv("WEATHER_PATH_MN"),
-    "North Dakota": os.getenv("WEATHER_PATH_ND"),
-    "Oklahoma": os.getenv("WEATHER_PATH_OK"),
-    "Texas": os.getenv("WEATHER_PATH_TX"),
-    "Washington": os.getenv("WEATHER_PATH_WA"),
+    "California":   "raw/weather/California weather.csv",
+    "Colorado":     "raw/weather/colorado weather.csv",
+    "Illinois":     "raw/weather/Illinois weather.csv",
+    "Iowa":         "raw/weather/Iowa weather.csv",
+    "Kansas":       "raw/weather/kansas weather.csv",
+    "Minnesota":    "raw/weather/Minnesota weather.csv",
+    "North Dakota": "raw/weather/North Dakota weather.csv",
+    "Oklahoma":     "raw/weather/Oklahoma weather.csv",
+    "Texas":        "raw/weather/Texas weather.csv",
+    "Washington":   "raw/weather/Washington weather.csv",
 }
  
-ENERGY_PATH = os.getenv("ENERGY_PATH", "raw/Net_Energy_Generation/Top 10 States net Generation.csv")
-
-def run_training():
-    try:
-        logging.info("Starting training pipeline")
-        dagshub.init(
-            repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
-            repo_name=os.getenv("DAGSHUB_REPO_NAME"),
-            mlflow=True
-        )
-        training_pipeline(
-            weather_paths=WEATHER_PATHS,
-            energy_path=ENERGY_PATH
-        )
-        logging.info("Training pipeline completed successfully")
-    except Exception as e:
-        logging.error(f"Training pipeline failed: {e}")
+ENERGY_PATH = "raw/Net_Energy_Generation/Top 10 States net Generation.csv"
 
 def monthly_update():
     try:
@@ -85,7 +69,7 @@ def get_forecast():
         return jsonify({"error": f"Invalid model '{model_name}'. Choose from: {MODELS}"}), 400
     
     try:
-        conn=psycopg2.connect(DB_PATH)
+        conn=psycopg2.connect(DB_URL)
         conn.row_factory= psycopg2.Row
         
         rows= conn.execute("""SELECT month,predicted,actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""",(state,model_name)).fetchall()

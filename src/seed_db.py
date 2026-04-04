@@ -7,7 +7,7 @@ load_dotenv()
 
 DB_URL=os.getenv("DATABASE_URL")
 
-ENERGY_PATH= r"C:\Users\Ishan Khan\OneDrive\Desktop\windEnergyend to end\raw\Net_Energy_Generation\Top 10 States net Generation.csv"
+ENERGY_PATH = os.getenv("ENERGY_PATH", "raw/Net_Energy_Generation/Top 10 States net Generation.csv")
 
 df=pd.read_csv(ENERGY_PATH)
 
