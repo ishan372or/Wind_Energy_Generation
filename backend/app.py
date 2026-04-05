@@ -41,8 +41,10 @@ def get_forecast():
         conn=psycopg2.connect(DB_URL)
         cursor= conn.cursor(cursor_factory=RealDictCursor)
         
-        rows= cursor.execute("""SELECT month,predicted,actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""",(state,model_name)).fetchall()
+        cursor.execute("""SELECT month, predicted, actual FROM predictions WHERE state=%s AND model_name=%s ORDER BY month ASC""", (state, model_name)) 
+        rows = cursor.fetchall()
         
+        cursor.close()
         conn.close()
         
         if not rows:
