@@ -2,8 +2,11 @@ from zenml import step
 import pandas as pd
 import logging
 import joblib
-import psycopg
+import psycopg2
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
  
 @step
 def predict_and_store(
@@ -13,7 +16,7 @@ def predict_and_store(
 ):
     preprocessor= joblib.load("preprocessor.pkl")
     DB_URL= os.getenv("DATABASE_URL")
-    conn = psycopg.connect(DB_URL)
+    conn = psycopg2.connect(DB_URL)
     cursor= conn.cursor()
     
     test_df = df[df["Month_Year"] >= "2023-01-01"]
@@ -39,7 +42,7 @@ def predict_and_store(
             X, _ = preprocessor.transform(row_df)
             pred = float(model.predict(X)[0])
             actual = float(row["Net_Generation_MWh"])  
-            conn.execute("""
+            cursor.execute("""
                 UPDATE predictions
                 SET predicted = %s
                 WHERE state = %s AND month = %s AND model_name = %s AND predicted IS NULL
