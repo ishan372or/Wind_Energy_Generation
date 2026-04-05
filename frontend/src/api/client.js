@@ -1,4 +1,4 @@
-const API_BASE_PATH = '/api'
+const API_BASE_PATH = import.meta.env.VITE_API_URL || '/api'
 
 export async function getModels() {
   const response = await fetch(`${API_BASE_PATH}/models`)
