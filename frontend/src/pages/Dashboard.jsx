@@ -3,6 +3,8 @@ import Header from '../components/Header.jsx'
 import StateSelector from '../components/StateSelector.jsx'
 import ModelSelector from '../components/ModelSelector.jsx'
 import PredictionChart from '../components/PredictionChart.jsx'
+import InfoSection from '../components/InfoSection.jsx'
+import Footer from '../components/Footer.jsx'
 import { getModels, getPredictions } from '../api/client.js'
 import '../App.css'
 
@@ -121,43 +123,46 @@ function Dashboard() {
   }, [chartData, selectedState])
 
   return (
-    <div className="we-app">
+    <>
       <Header />
+      <div className="we-app">
+        <main className="we-main">
+          <section className="we-controls-row">
+            <StateSelector value={selectedState} onChange={setSelectedState} />
+            <ModelSelector
+              models={models}
+              selectedModels={selectedModels}
+              onChange={setSelectedModels}
+              loading={modelsLoading}
+              error={modelsError}
+            />
+          </section>
 
-      <main className="we-main">
-        <section className="we-controls-row">
-          <StateSelector value={selectedState} onChange={setSelectedState} />
-          <ModelSelector
-            models={models}
-            selectedModels={selectedModels}
-            onChange={setSelectedModels}
-            loading={modelsLoading}
-            error={modelsError}
-          />
-        </section>
+          {predictionsError && (
+            <div className="we-banner we-banner-error">
+              <span>{predictionsError}</span>
+            </div>
+          )}
 
-        {predictionsError && (
-          <div className="we-banner we-banner-error">
-            <span>{predictionsError}</span>
-          </div>
-        )}
+          {stateSummary && (
+            <div className="we-banner we-banner-subtle">
+              <span>{stateSummary}</span>
+            </div>
+          )}
 
-        {stateSummary && (
-          <div className="we-banner we-banner-subtle">
-            <span>{stateSummary}</span>
-          </div>
-        )}
-
-        <section className="we-main-content">
-          <PredictionChart
-            data={chartData}
-            selectedModels={selectedModels}
-            isLoading={predictionsLoading}
-            hasSelection={hasModelSelection}
-          />
-        </section>
-      </main>
-    </div>
+          <section className="we-main-content">
+            <PredictionChart
+              data={chartData}
+              selectedModels={selectedModels}
+              isLoading={predictionsLoading}
+              hasSelection={hasModelSelection}
+            />
+          </section>
+        </main>
+      </div>
+      <InfoSection />
+      <Footer />
+    </>
   )
 }
 

@@ -12,10 +12,10 @@ import {
 const COLORS = [
   '#0f766e',
   '#2563eb',
-  '#f97316',
+  '#f59e0b',
   '#7c3aed',
-  '#dc2626',
-  '#16a34a',
+  '#ef4444',
+  '#10b981',
   '#0891b2',
   '#a16207',
 ]
@@ -54,29 +54,36 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
       <div className="we-chart-container">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 24, left: 8, bottom: 8 }}>
-            <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+            <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" opacity={0.3} />
+            <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} />
             <YAxis
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: '#64748b' }}
               label={{
                 value: 'MWh',
                 angle: -90,
                 position: 'insideLeft',
-                style: { textAnchor: 'middle' },
+                style: { textAnchor: 'middle', fill: '#64748b' },
               }}
             />
-            <Tooltip />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                border: '1px solid rgba(20, 184, 166, 0.3)',
+                borderRadius: '0.5rem',
+                color: '#f8fafc',
+              }}
+            />
+            <Legend wrapperStyle={{ fontSize: 12, paddingTop: '1rem' }} />
             <Line
               type="monotone"
               dataKey="actual"
-              name="Actual"
-              stroke="#16a34a"       
-              strokeWidth={2}
+              name="Actual Generation"
+              stroke="#10b981"
+              strokeWidth={2.5}
               dot={false}
-              activeDot={{ r: 4 }}
+              activeDot={{ r: 5, fill: '#059669' }}
             />
-              {selectedModels.map((model, index) => (
+            {selectedModels.map((model, index) => (
               <Line
                 key={model}
                 type="monotone"
@@ -86,7 +93,7 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}
-                activeDot={{ r: 4 }}
+                activeDot={{ r: 5 }}
               />
             ))}
           </LineChart>
