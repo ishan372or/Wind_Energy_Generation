@@ -1,0 +1,135 @@
+.we-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+  color: #f8fafc;
+  padding: 3rem 1.75rem 2rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(20, 184, 166, 0.2);
+}
+
+.we-footer-content {
+  max-width: 1120px;
+  margin: 0 auto 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.we-footer-section h4 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #14b8a6;
+  letter-spacing: 0.5px;
+}
+
+.we-footer-section p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+.we-footer-section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.we-footer-section ul li {
+  margin-bottom: 0.75rem;
+}
+
+.we-footer-section a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.we-footer-section a:hover {
+  color: #14b8a6;
+  transform: translateX(4px);
+}
+
+.we-footer-bottom {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.we-footer-bottom p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.we-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.we-footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s ease;
+}
+
+.we-footer-links a:hover {
+  color: #14b8a6;
+  transform: none;
+}
+
+.we-divider {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .we-footer {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  .we-footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .we-footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .we-footer-bottom p,
+  .we-footer-links {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .we-footer {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .we-footer-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .we-footer-section h4 {
+    font-size: 0.95rem;
+  }
+
+  .we-footer-section p {
+    font-size: 0.85rem;
+  }
+}
