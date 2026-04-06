@@ -125,7 +125,7 @@ function Dashboard() {
   return (
     <>
       <Header />
-      <div className="we-app">
+      <div className="we-app" id="dashboard">
         <main className="we-main">
           <section className="we-controls-row">
             <StateSelector value={selectedState} onChange={setSelectedState} />

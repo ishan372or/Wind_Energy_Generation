@@ -8,7 +8,7 @@ function ModelSelector({ models, selectedModels, onChange, loading, error }) {
   }
 
   return (
-    <div className="we-control-group">
+    <div className="we-control-group" id="models">
       <div className="we-label-row">
         <label className="we-label">Models</label>
         {loading && <span className="we-label-hint">Loading models…</span>}

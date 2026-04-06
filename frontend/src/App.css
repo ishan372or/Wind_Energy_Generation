@@ -5,6 +5,10 @@
   flex: 1;
 }
 
+[id] {
+  scroll-margin-top: 1.25rem;
+}
+
 .we-main {
   display: flex;
   flex-direction: column;
@@ -228,26 +232,3 @@
     gap: 1.5rem;
   }
 }
-}
-
-.we-muted-text {
-  color: #94a3b8;
-  font-size: 0.82rem;
-}
-
-@media (max-width: 900px) {
-  .we-controls-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .we-app {
-    padding: 1.25rem 1rem 1.75rem;
-  }
-
-  .we-chart-panel {
-    height: 360px;
-  }
-}
-

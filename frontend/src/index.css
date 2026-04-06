@@ -21,6 +21,10 @@
   --error: #ef4444;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 *,
 *::before,
 *::after {
