@@ -9,3 +9,4 @@ lightgbm
 joblib
 psycopg2-binary
 gunicorn
+catboost

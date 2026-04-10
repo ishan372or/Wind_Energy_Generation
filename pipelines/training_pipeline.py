@@ -29,7 +29,7 @@ def training_pipeline(weather_paths:dict[str, str],energy_path:str):
     
     X_train, X_test, y_train, y_test, X_val, y_val= preprocess_data(df_lagged)
     
-    xgb_model,lgb_model=train_models(
+    xgb_model,lgb_model,cat_model=train_models(
         X_train, y_train,
         X_val, y_val,
         X_test, y_test)
@@ -40,12 +40,18 @@ def training_pipeline(weather_paths:dict[str, str],energy_path:str):
     results_lgb= evaluate_model(
         lgb_model, X_test, y_test)
     
+    results_cat= evaluate_model(
+        cat_model, X_test, y_test)
+
     log_model_metrics(xgb_model, "XGBoost_Model", results_xgb)
     log_model_metrics(lgb_model, "LightGBM_Model", results_lgb)
-    
-    predict_and_store(xgb_model, lgb_model, df_lagged)
+    log_model_metrics(cat_model, "CatBoost_Model", results_cat)
+
+    predict_and_store(xgb_model, lgb_model, cat_model, df_lagged)
     
     return {
         "XGB_Results": results_xgb,
-        "LGB_Results": results_lgb
+        "LGB_Results": results_lgb,
+        "CatBoost_Results": results_cat
     }
+

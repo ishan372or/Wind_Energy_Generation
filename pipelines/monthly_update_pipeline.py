@@ -88,6 +88,7 @@ def monthly_update(weather_paths:dict[str, str],energy_path:str):
     predict_and_store(
         models["XGBoost"],
         models["LightGBM"],
+        models["CatBoost"],
         df_lagged
     )
     

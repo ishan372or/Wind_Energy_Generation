@@ -19,11 +19,11 @@ STATES = [
     "California", "Colorado", "Illinois", "Iowa", "Kansas",
     "Minnesota", "North Dakota", "Oklahoma", "Texas", "Washington"
 ]
-MODELS = ["XGBoost", "LightGBM"]
+MODELS = ["XGBoost", "LightGBM","CatBoost"]
         
 @app.route("/models", methods=["GET"])
 def get_models():
-    return jsonify({"models": ["XGBoost", "LightGBM"]})
+    return jsonify({"models": ["XGBoost", "LightGBM","CatBoost"]})
 
 @app.route("/forecast",methods=["GET"])
 def get_forecast():

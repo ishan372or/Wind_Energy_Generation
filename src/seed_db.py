@@ -30,7 +30,7 @@ cursor.execute("""
 
 count = 0
 for _, row in df.iterrows():
-    for model_name in ["XGBoost", "LightGBM"]:
+    for model_name in ["XGBoost", "LightGBM", "CatBoost"]:
         cursor.execute(
             "INSERT INTO predictions VALUES (%s, %s, %s, %s, %s)",
             (

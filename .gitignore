@@ -10,3 +10,4 @@ dist/
 .vite/
 .vscode/
 .zen/
+.catboost_info/

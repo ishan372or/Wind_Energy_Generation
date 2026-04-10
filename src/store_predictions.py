@@ -12,6 +12,7 @@ load_dotenv()
 def predict_and_store(
     xgb_model,
     lgb_model,
+    cat_model,
     df: pd.DataFrame
 ):
     preprocessor= joblib.load("preprocessor.pkl")
@@ -30,7 +31,7 @@ def predict_and_store(
     except:
         stored_pairs = set()
  
-    for model, model_name in [(xgb_model, "XGBoost"), (lgb_model, "LightGBM")]:
+    for model, model_name in [(xgb_model, "XGBoost"), (lgb_model, "LightGBM"), (cat_model, "CatBoost")]:
         for _, row in test_df.iterrows():
             month = row["Month_Year"].strftime("%Y-%m")
             state = row["Region"]

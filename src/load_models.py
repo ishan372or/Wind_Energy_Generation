@@ -17,8 +17,10 @@ def load_models():
     
     xgboost=mlfflow.sklearn.load_model(f"runs:/{run_id_xgboost}/model")
     lightgbm=mlflow.sklearn.load_model(f"runs:/{run_id_lightgbm}/model")
+    catboost=mlflow.sklearn.load_model(f"runs:/{run_id_catboost}/model")
     
     return{
         "XGBoost": xgboost,
-        "LightGBM": lightgbm
+        "LightGBM": lightgbm,
+        "CatBoost": catboost
     }
