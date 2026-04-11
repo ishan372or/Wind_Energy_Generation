@@ -24,22 +24,7 @@ function Footer() {
               <a href="#models">Models</a>
             </li>
             <li>
-              <a href="#data">Data Sources</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="we-footer-section">
-          <h4>Resources</h4>
-          <ul>
-            <li>
               <a href="#documentation">Documentation</a>
-            </li>
-            <li>
-              <a href="#api">API Reference</a>
-            </li>
-            <li>
-              <a href="#support">Support</a>
             </li>
           </ul>
         </div>
