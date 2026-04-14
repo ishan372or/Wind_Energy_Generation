@@ -1,38 +1,138 @@
-function ModelSelector({ models, selectedModels, onChange, loading, error }) {
-  const handleToggle = (model) => {
-    if (selectedModels.includes(model)) {
-      onChange(selectedModels.filter((m) => m !== model))
-    } else {
-      onChange([...selectedModels, model])
-    }
-  }
+import { useEffect, useMemo, useState } from 'react'
+import ModelClusterCard from './ModelClusterCard.jsx'
 
-  return (
-    <div className="we-control-group" id="models">
-      <div className="we-label-row">
-        <label className="we-label">Models</label>
-        {loading && <span className="we-label-hint">Loading models…</span>}
+function ModelSelector({
+  modelFamilies,
+  expandedFamilies,
+  modelEnabled,
+  modelMetrics,
+  availableModels,
+  loading,
+  error,
+  onToggleFamilyExpanded,
+  onToggleFamilyEnabled,
+  onToggleModelEnabled,
+}) {
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+  const familyEntries = useMemo(() => Object.entries(modelFamilies), [modelFamilies])
+  const enabledCount = useMemo(
+    () => Object.values(modelEnabled).filter(Boolean).length,
+    [modelEnabled],
+  )
+
+  useEffect(() => {
+    if (!isSheetOpen) {
+      return undefined
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isSheetOpen])
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && isSheetOpen) {
+        setIsSheetOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isSheetOpen])
+
+  const panelBody = (
+    <>
+      <div className="we-model-panel-header">
+        <div>
+          <h2 className="we-panel-title">Model Family Clusters</h2>
+          <p className="we-panel-subtitle">
+            Collapse a family for one averaged line, or expand it to compare each model.
+          </p>
+        </div>
+        <div className="we-model-panel-summary">
+          <span>{enabledCount} enabled</span>
+          {loading && <span className="we-label-hint">Refreshing models...</span>}
+        </div>
       </div>
+
       {error && <div className="we-error-text">{error}</div>}
-      {!loading && models.length === 0 && !error && (
-        <div className="we-muted-text">No models available.</div>
+
+      {!loading && familyEntries.length === 0 && !error && (
+        <div className="we-muted-text">No model families available.</div>
       )}
-      <div className="we-model-list">
-        {models.map((model) => (
-          <label key={model} className="we-model-item">
-            <input
-              type="checkbox"
-              checked={selectedModels.includes(model)}
-              onChange={() => handleToggle(model)}
-            />
-            <span>{model}</span>
-          </label>
+
+      <div className="we-cluster-stack">
+        {familyEntries.map(([familyName, family]) => (
+          <ModelClusterCard
+            key={familyName}
+            familyName={familyName}
+            family={family}
+            isExpanded={Boolean(expandedFamilies[familyName])}
+            modelEnabled={modelEnabled}
+            modelMetrics={modelMetrics}
+            availableModels={availableModels}
+            onToggleFamilyExpanded={onToggleFamilyExpanded}
+            onToggleFamilyEnabled={onToggleFamilyEnabled}
+            onToggleModelEnabled={onToggleModelEnabled}
+          />
         ))}
       </div>
-    </div>
+    </>
+  )
+
+  return (
+    <>
+      <div className="we-model-selector" id="models">
+        <div className="we-mobile-model-bar">
+          <div className="we-mobile-model-copy">
+            <span className="we-label">Model Families</span>
+            <span className="we-label-hint">{enabledCount} enabled</span>
+          </div>
+          <button
+            type="button"
+            className="we-mobile-sheet-button"
+            onClick={() => setIsSheetOpen(true)}
+          >
+            Open clusters
+          </button>
+        </div>
+
+        <div className="we-panel we-model-panel">{panelBody}</div>
+      </div>
+
+      {isSheetOpen && (
+        <div className="we-sheet-backdrop" role="presentation" onClick={() => setIsSheetOpen(false)}>
+          <div
+            className="we-model-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-model-sheet-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="we-sheet-handle" />
+            <div className="we-sheet-header">
+              <h2 id="mobile-model-sheet-title" className="we-panel-title">
+                Model Family Clusters
+              </h2>
+              <button
+                type="button"
+                className="we-modal-close"
+                onClick={() => setIsSheetOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+            <div className="we-sheet-content">{panelBody}</div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
 export default ModelSelector
-
-

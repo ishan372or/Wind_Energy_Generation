@@ -9,22 +9,18 @@ import {
   YAxis,
 } from 'recharts'
 
-const COLORS = [
-  '#0f766e',
-  '#2563eb',
-  '#f59e0b',
-  '#7c3aed',
-  '#ef4444',
-  '#10b981',
-  '#0891b2',
-  '#a16207',
-]
-
-function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
+function PredictionChart({
+  data,
+  seriesDefinitions,
+  actualLineColor,
+  isLoading,
+  hasSelection,
+  lineWarning,
+}) {
   if (!hasSelection) {
     return (
       <div className="we-panel we-panel-empty">
-        <p>Select at least one model to see predictions.</p>
+        <p>Enable at least one model family or individual model to see predictions.</p>
       </div>
     )
   }
@@ -32,12 +28,12 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
   if (isLoading) {
     return (
       <div className="we-panel we-panel-empty">
-        <p>Loading predictions…</p>
+        <p>Loading predictions...</p>
       </div>
     )
   }
 
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || seriesDefinitions.length === 0) {
     return (
       <div className="we-panel we-panel-empty">
         <p>No prediction data available for the current selection.</p>
@@ -49,8 +45,17 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
     <div className="we-panel we-chart-panel">
       <div className="we-panel-header">
         <h2 className="we-panel-title">Predicted Wind Energy Generation</h2>
-        <p className="we-panel-subtitle">Time-series forecast by model</p>
+        <p className="we-panel-subtitle">
+          Compare actual output with collapsed family averages or expanded model forecasts.
+        </p>
       </div>
+
+      {lineWarning && (
+        <div className="we-banner we-banner-warning">
+          <span>{lineWarning}</span>
+        </div>
+      )}
+
       <div className="we-chart-container">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 24, left: 8, bottom: 8 }}>
@@ -68,7 +73,7 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
             <Tooltip
               contentStyle={{
                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                border: '1px solid rgba(20, 184, 166, 0.3)',
+                border: '1px solid rgba(249, 115, 22, 0.25)',
                 borderRadius: '0.5rem',
                 color: '#f8fafc',
               }}
@@ -78,20 +83,20 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
               type="monotone"
               dataKey="actual"
               name="Actual Generation"
-              stroke="#10b981"
-              strokeWidth={2.5}
+              stroke={actualLineColor}
+              strokeWidth={2.75}
               dot={false}
-              activeDot={{ r: 5, fill: '#059669' }}
+              activeDot={{ r: 5, fill: '#EA580C' }}
             />
-            {selectedModels.map((model, index) => (
+            {seriesDefinitions.map((series) => (
               <Line
-                key={model}
+                key={series.key}
                 type="monotone"
-                dataKey={model}
-                name={`${model} (Predicted)`}
-                stroke={COLORS[index % COLORS.length]}
-                strokeWidth={2}
-                strokeDasharray="5 5"
+                dataKey={series.dataKey}
+                name={series.name}
+                stroke={series.stroke}
+                strokeWidth={series.strokeWidth}
+                strokeDasharray={series.strokeDasharray}
                 dot={false}
                 activeDot={{ r: 5 }}
               />
@@ -104,5 +109,3 @@ function PredictionChart({ data, selectedModels, isLoading, hasSelection }) {
 }
 
 export default PredictionChart
-
-
