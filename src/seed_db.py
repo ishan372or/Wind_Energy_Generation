@@ -30,14 +30,25 @@ cursor.execute("""
 
 count = 0
 for _, row in df.iterrows():
-    for model_name in ["XGBoost", "LightGBM", "CatBoost"]:
+    for model_name in ["XGBoost", "LightGBM", "CatBoost","ElasticNet"]:
         cursor.execute(
-            "INSERT INTO predictions VALUES (%s, %s, %s, %s, %s)",
+            """
+            INSERT INTO predictions (state, month, predicted, actual, model_name)
+            SELECT %s, %s, %s, %s, %s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM predictions
+                WHERE state = %s AND month = %s AND model_name = %s
+            )
+            """,
             (
                 str(row["Region"]),
                 row["Month_Year"].strftime("%Y-%m"),
                 None,
                 float(row["Net_Generation_MWh"]),
+                str(model_name),
+
+                str(row["Region"]),
+                row["Month_Year"].strftime("%Y-%m"),
                 str(model_name)
             )
         )

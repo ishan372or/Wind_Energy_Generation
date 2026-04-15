@@ -9,6 +9,7 @@ load_dotenv()
 def load_models():
     run_id_lightgbm = os.getenv("run_id_lightgbm")
     run_id_xgboost = os.getenv("run_id_xgboost")
+    run_id_catboost = os.getenv("run_id_catboost")
     dagshub.init(
         repo_owner="ishan372or",
         repo_name="Wind_Energy_Prediction_end_to_end",

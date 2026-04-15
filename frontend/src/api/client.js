@@ -6,7 +6,12 @@ export async function getModels() {
     throw new Error('Failed to load models')
   }
   const data = await response.json()
-  return {data: data.models}
+  return {
+    data: {
+      models: Array.isArray(data.models) ? data.models : [],
+      families: Array.isArray(data.families) ? data.families : [],
+    },
+  }
 }
 
 export async function getPredictions(state, model) {

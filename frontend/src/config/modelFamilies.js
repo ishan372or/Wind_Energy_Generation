@@ -3,13 +3,9 @@ export const DEFAULT_MODEL_FAMILIES = {
     color: '#1D9E75',
     models: ['XGBoost', 'LightGBM', 'CatBoost'],
   },
-  'Deep Learning': {
-    color: '#534AB7',
-    models: ['LSTM', 'Transformer'],
-  },
-  Statistical: {
-    color: '#888780',
-    models: ['ARIMA', 'Prophet'],
+  'Linear Models': {
+    color: '#C96B3B',
+    models: ['ElasticNet'],
   },
 }
 
@@ -17,21 +13,10 @@ export const STORAGE_KEYS = {
   uiState: 'wind-energy-model-clusters',
 }
 
-export const DEFAULT_CLUSTER_UI_STATE = {
-  expandedFamilies: {
-    'Gradient Boost': true,
-    'Deep Learning': false,
-    Statistical: false,
-  },
-  modelEnabled: {
-    XGBoost: true,
-    LightGBM: true,
-    CatBoost: true,
-    LSTM: false,
-    Transformer: false,
-    ARIMA: false,
-    Prophet: false,
-  },
+const DEFAULT_FAMILY_COLORS = ['#1D9E75', '#C96B3B', '#0F6BA8', '#64748B']
+const IMPORTED_MODELS_FAMILY = {
+  name: 'Imported Models',
+  color: '#0F6BA8',
 }
 
 export const MODEL_LINE_PATTERNS = ['0', '8 5', '2 6', '10 4 2 4']
@@ -80,31 +65,38 @@ export function getFamilyPalette(baseColor, count) {
   })
 }
 
-export function getDefaultExpandedFamilies() {
-  return { ...DEFAULT_CLUSTER_UI_STATE.expandedFamilies }
-}
-
-export function getDefaultModelEnabled() {
-  return { ...DEFAULT_CLUSTER_UI_STATE.modelEnabled }
-}
-
 export function getAllModels(modelFamilies) {
   return Object.values(modelFamilies).flatMap((family) => family.models)
 }
 
-export function ensureUiStateIntegrity(modelFamilies, uiState) {
-  const nextExpandedFamilies = { ...getDefaultExpandedFamilies(), ...uiState.expandedFamilies }
-  const nextModelEnabled = { ...getDefaultModelEnabled(), ...uiState.modelEnabled }
+function normalizeModelFamilies(modelFamilies) {
+  if (Array.isArray(modelFamilies)) {
+    return modelFamilies
+      .filter((family) => family && typeof family === 'object' && family.name)
+      .map((family, index) => [
+        family.name,
+        {
+          color:
+            family.color ||
+            DEFAULT_FAMILY_COLORS[index % DEFAULT_FAMILY_COLORS.length],
+          models: Array.isArray(family.models) ? family.models.filter(Boolean) : [],
+        },
+      ])
+  }
 
-  Object.keys(modelFamilies).forEach((familyName) => {
-    if (!(familyName in nextExpandedFamilies)) {
-      nextExpandedFamilies[familyName] = false
-    }
+  return Object.entries(modelFamilies ?? {})
+}
 
-    modelFamilies[familyName].models.forEach((modelName) => {
-      if (!(modelName in nextModelEnabled)) {
-        nextModelEnabled[modelName] = false
-      }
+export function ensureUiStateIntegrity(modelFamilies, uiState = {}) {
+  const nextExpandedFamilies = {}
+  const nextModelEnabled = {}
+
+  Object.entries(modelFamilies).forEach(([familyName, family], index) => {
+    nextExpandedFamilies[familyName] =
+      uiState.expandedFamilies?.[familyName] ?? index === 0
+
+    family.models.forEach((modelName) => {
+      nextModelEnabled[modelName] = uiState.modelEnabled?.[modelName] ?? true
     })
   })
 
@@ -114,35 +106,40 @@ export function ensureUiStateIntegrity(modelFamilies, uiState) {
   }
 }
 
-export function ensureModelFamiliesContainModels(modelFamilies, availableModels) {
-  const familyEntries = Object.entries(modelFamilies)
-  const knownModels = new Set(getAllModels(modelFamilies))
-  const missingModels = availableModels.filter((model) => !knownModels.has(model))
+export function resolveModelFamilies(availableModels, configuredFamilies = DEFAULT_MODEL_FAMILIES) {
+  const availableModelList = Array.isArray(availableModels) ? availableModels : []
+  const availableModelSet = new Set(availableModelList)
 
-  if (missingModels.length === 0) {
-    return modelFamilies
+  const familyEntries = normalizeModelFamilies(configuredFamilies)
+    .map(([familyName, family], index) => {
+      const familyModels = Array.isArray(family.models) ? family.models : []
+
+      return [
+        familyName,
+        {
+          color:
+            family.color ||
+            DEFAULT_FAMILY_COLORS[index % DEFAULT_FAMILY_COLORS.length],
+          models: Array.from(new Set(familyModels)).filter((modelName) =>
+            availableModelSet.has(modelName),
+          ),
+        },
+      ]
+    })
+    .filter(([, family]) => family.models.length > 0)
+
+  const knownModels = new Set(getAllModels(Object.fromEntries(familyEntries)))
+  const unknownModels = availableModelList.filter((modelName) => !knownModels.has(modelName))
+
+  if (unknownModels.length > 0) {
+    familyEntries.push([
+      IMPORTED_MODELS_FAMILY.name,
+      {
+        color: IMPORTED_MODELS_FAMILY.color,
+        models: Array.from(new Set(unknownModels)),
+      },
+    ])
   }
 
-  const nextFamilies = { ...modelFamilies }
-  const fallbackFamilyName = 'Imported Models'
-
-  if (!nextFamilies[fallbackFamilyName]) {
-    nextFamilies[fallbackFamilyName] = {
-      color: '#0F6BA8',
-      models: [],
-    }
-  }
-
-  const mergedModels = new Set(nextFamilies[fallbackFamilyName].models)
-  missingModels.forEach((model) => mergedModels.add(model))
-
-  nextFamilies[fallbackFamilyName] = {
-    ...nextFamilies[fallbackFamilyName],
-    models: Array.from(mergedModels),
-  }
-
-  return Object.fromEntries([
-    ...familyEntries,
-    [fallbackFamilyName, nextFamilies[fallbackFamilyName]],
-  ])
+  return Object.fromEntries(familyEntries)
 }

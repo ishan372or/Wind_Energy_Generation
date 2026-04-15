@@ -13,6 +13,7 @@ def predict_and_store(
     xgb_model,
     lgb_model,
     cat_model,
+    elasticnet_model,
     df: pd.DataFrame
 ):
     preprocessor = joblib.load("preprocessor.pkl")
@@ -29,7 +30,8 @@ def predict_and_store(
     for model, model_name in [
         (xgb_model, "XGBoost"),
         (lgb_model, "LightGBM"),
-        (cat_model, "CatBoost")
+        (cat_model, "CatBoost"),
+        (elasticnet_model, "ElasticNet")
     ]:
         for _, row in test_df.iterrows():
             try:

@@ -8,6 +8,7 @@ from typing_extensions import Annotated
 from typing import Tuple
 from xgboost.callback import EarlyStopping
 from catboost import CatBoostRegressor
+from sklearn.linear_model import ElasticNet
 
 class ModelTrainer:
     def __init__(self,X_train,y_train,X_val,y_val,X_test,y_test):
@@ -48,6 +49,13 @@ class ModelTrainer:
             verbose=False
         )
         
+        self.elastic= ElasticNet(
+            alpha=0.1,
+            l1_ratio=0.5,
+            random_state=42,
+            max_iter=500
+        )
+        
     def train_xgboost(self):
         
         self.xgb.fit(self.X_train,self.y_train, eval_set=[(self.X_val,self.y_val)], verbose=False)
@@ -72,6 +80,11 @@ class ModelTrainer:
         logging.info(f"CatBoost Validation Score: {val_score}")
         return self.cat
     
+    def train_elasticnet(self):
+        self.elastic.fit(self.X_train,self.y_train)
+        
+        return self.elastic
+    
 @step 
 def train_models(
     X_train, y_train,
@@ -79,7 +92,8 @@ def train_models(
     X_test, y_test
 )-> Tuple[Annotated[xgb.XGBRegressor, "XGB_Model"],
     Annotated[lgb.LGBMRegressor, "LGB_Model"],
-    Annotated[CatBoostRegressor, "CatBoost_Model"]]:
+    Annotated[CatBoostRegressor, "CatBoost_Model"],
+    Annotated[ElasticNet, "ElasticNet_Model"]]:
 
     try:
         trainer=ModelTrainer(
@@ -91,8 +105,9 @@ def train_models(
         xgb_model=trainer.train_xgboost()
         lgb_model=trainer.train_lightgbm()
         cat_model=trainer.train_catboost()
+        elastic_model=trainer.train_elasticnet()
         
-        return xgb_model, lgb_model, cat_model
+        return xgb_model, lgb_model, cat_model, elastic_model
     except Exception as e:
         logging.error(f"Error during model training: {e}")
         raise e

@@ -9,12 +9,12 @@ import { getModels, getPredictions } from '../api/client.js'
 import {
   buildFamilyAverageKey,
   DEFAULT_MODEL_FAMILIES,
-  ensureModelFamiliesContainModels,
   ensureUiStateIntegrity,
   getFamilyPalette,
   MAX_FORECAST_LINES,
   MAX_VISIBLE_LINES,
   MODEL_LINE_PATTERNS,
+  resolveModelFamilies,
   STORAGE_KEYS,
 } from '../config/modelFamilies.js'
 import '../App.css'
@@ -52,12 +52,10 @@ function areObjectsEqual(left, right) {
 }
 
 function getInitialClusterState() {
-  const storedUiState = readStoredValue(STORAGE_KEYS.uiState, {
+  return readStoredValue(STORAGE_KEYS.uiState, {
     expandedFamilies: {},
     modelEnabled: {},
   })
-
-  return ensureUiStateIntegrity(DEFAULT_MODEL_FAMILIES, storedUiState)
 }
 
 function buildChartRows(resultsByModel) {
@@ -112,6 +110,7 @@ function Dashboard() {
   const [selectedState, setSelectedState] = useState('Texas')
 
   const [models, setModels] = useState([])
+  const [backendModelFamilies, setBackendModelFamilies] = useState([])
   const [modelsLoading, setModelsLoading] = useState(false)
   const [modelsError, setModelsError] = useState('')
 
@@ -123,8 +122,12 @@ function Dashboard() {
   const [predictionsError, setPredictionsError] = useState('')
 
   const modelFamilies = useMemo(
-    () => ensureModelFamiliesContainModels(DEFAULT_MODEL_FAMILIES, models),
-    [models],
+    () =>
+      resolveModelFamilies(
+        models,
+        backendModelFamilies.length > 0 ? backendModelFamilies : DEFAULT_MODEL_FAMILIES,
+      ),
+    [backendModelFamilies, models],
   )
 
   const { expandedFamilies, modelEnabled } = clusterUiState
@@ -142,19 +145,23 @@ function Dashboard() {
         setModelsError('')
 
         const res = await getModels()
-        const modelList = Array.isArray(res.data) ? res.data : res.data?.models ?? []
+        const modelList = Array.isArray(res.data?.models) ? res.data.models : []
+        const familyList = Array.isArray(res.data?.families) ? res.data.families : []
 
         if (cancelled) {
           return
         }
 
         setModels(modelList)
+        setBackendModelFamilies(familyList)
       } catch (error) {
         if (cancelled) {
           return
         }
 
         setModelsError(error.message || 'Unable to load models')
+        setModels([])
+        setBackendModelFamilies([])
       } finally {
         if (!cancelled) {
           setModelsLoading(false)

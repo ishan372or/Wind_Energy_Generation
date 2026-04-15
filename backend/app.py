@@ -19,11 +19,23 @@ STATES = [
     "California", "Colorado", "Illinois", "Iowa", "Kansas",
     "Minnesota", "North Dakota", "Oklahoma", "Texas", "Washington"
 ]
-MODELS = ["XGBoost", "LightGBM","CatBoost"]
+MODEL_FAMILIES = [
+    {
+        "name": "Gradient Boost",
+        "color": "#1D9E75",
+        "models": ["XGBoost", "LightGBM", "CatBoost"],
+    },
+    {
+        "name": "Linear Models",
+        "color": "#C96B3B",
+        "models": ["ElasticNet"],
+    },
+]
+MODELS = [model for family in MODEL_FAMILIES for model in family["models"]]
         
 @app.route("/models", methods=["GET"])
 def get_models():
-    return jsonify({"models": ["XGBoost", "LightGBM","CatBoost"]})
+    return jsonify({"models": MODELS, "families": MODEL_FAMILIES})
 
 @app.route("/forecast",methods=["GET"])
 def get_forecast():

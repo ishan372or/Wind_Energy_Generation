@@ -89,6 +89,7 @@ def monthly_update(weather_paths:dict[str, str],energy_path:str):
         models["XGBoost"],
         models["LightGBM"],
         models["CatBoost"],
+        models["ElasticNet"],
         df_lagged
     )
     
