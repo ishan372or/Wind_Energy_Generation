@@ -80,16 +80,14 @@ function ModelClusterCard({
             aria-expanded={isExpanded}
             aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${familyName}`}
           >
-            <span className="we-cluster-mode">
-              {isExpanded ? 'Expanded' : `${familyName} (avg)`}
-            </span>
+            <span className="we-cluster-mode">{isExpanded ? 'Expanded view' : 'Family average'}</span>
             <ChevronIcon expanded={isExpanded} />
           </button>
         </div>
 
         <div className="we-cluster-caption">
-          <span>{activeCount > 0 ? `${activeCount} models enabled` : 'Cluster hidden'}</span>
-          <span>{isExpanded ? 'Individual lines' : 'Collapsed family average'}</span>
+          <span>{activeCount > 0 ? `${activeCount} models on chart` : 'Hidden from chart'}</span>
+          <span>{isExpanded ? 'Expanded comparison' : 'Collapsed trend'}</span>
         </div>
       </div>
 
@@ -120,8 +118,7 @@ function ModelClusterCard({
         </div>
       ) : (
         <div className="we-cluster-collapsed-copy">
-          Collapsed clusters render one dashed representative forecast line in the family
-          color.
+          Collapsed families draw one dashed trend line in the family color.
         </div>
       )}
     </article>

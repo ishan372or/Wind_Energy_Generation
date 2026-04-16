@@ -10,12 +10,16 @@ function Footer() {
     <footer className="we-footer">
       <div className="we-footer-content">
         <div className="we-footer-section">
+          <span className="we-footer-kicker">Project note</span>
           <h4>Wind Energy Dashboard</h4>
-          <p>Advanced ML-driven forecasting for renewable energy generation across the United States.</p>
+          <p>
+            Built for comparing monthly wind generation forecasts against observed output
+            without losing the broader story.
+          </p>
         </div>
 
         <div className="we-footer-section">
-          <h4>Quick Links</h4>
+          <h4>Jump to</h4>
           <ul>
             <li>
               <a href="#dashboard">Dashboard</a>
@@ -30,7 +34,7 @@ function Footer() {
         </div>
 
         <div className="we-footer-section">
-          <h4>Connect</h4>
+          <h4>Project links</h4>
           <ul>
             <li>
               <a href={REPO_URL} target="_blank" rel="noreferrer">
@@ -52,31 +56,38 @@ function Footer() {
       </div>
 
       <div className="we-footer-bottom">
-        <p>&copy; {currentYear} Wind Energy Prediction Dashboard. All rights reserved.</p>
+        <p>&copy; {currentYear} Wind Energy Prediction Dashboard</p>
         <div className="we-footer-links">
-          <a href="#privacy">Privacy Policy</a>
+          <a href="#privacy">Data use</a>
           <span className="we-divider">|</span>
-          <a href="#terms">Terms of Service</a>
+          <a href="#terms">Forecast caveat</a>
           <span className="we-divider">|</span>
-          <a href="#contact">Contact</a>
+          <a href="#contact">Support</a>
         </div>
       </div>
 
       <div className="we-footer-meta">
         <article className="we-footer-meta-card" id="privacy">
-          <h5>Privacy Policy</h5>
-          <p>This dashboard UI does not ask users for personal information and only requests forecast data needed to render charts.</p>
+          <h5>Data use</h5>
+          <p>
+            This dashboard does not collect personal information and only requests the
+            forecast data needed to render the charts.
+          </p>
         </article>
 
         <article className="we-footer-meta-card" id="terms">
-          <h5>Terms of Service</h5>
-          <p>Forecasts are provided for exploration and comparison. Validate results independently before operational use.</p>
+          <h5>Forecast caveat</h5>
+          <p>
+            Forecasts are presented for exploration and comparison. Validate results
+            independently before operational use.
+          </p>
         </article>
 
         <article className="we-footer-meta-card" id="contact">
-          <h5>Contact</h5>
+          <h5>Need help?</h5>
           <p>
-            Need help with the dashboard or API? Open an issue on GitHub and include the state, model, and any error details.
+            Open an issue on GitHub and include the state, model, and any error details so
+            the problem is easy to reproduce.
           </p>
           <a href={ISSUES_URL} target="_blank" rel="noreferrer">
             Report an issue

@@ -14,9 +14,12 @@ const TOP_WIND_STATES = [
 function StateSelector({ value, onChange }) {
   return (
     <div className="we-control-group">
-      <label htmlFor="state-select" className="we-label">
-        State
-      </label>
+      <div className="we-label-row">
+        <label htmlFor="state-select" className="we-label">
+          State
+        </label>
+        <span className="we-label-hint">Top U.S. wind producers</span>
+      </div>
       <select
         id="state-select"
         className="we-select"

@@ -20,7 +20,7 @@ import {
 import '../App.css'
 
 const REFRESH_INTERVAL_MS = 3 * 60 * 1000
-const ACTUAL_LINE_COLOR = '#F97316'
+const ACTUAL_LINE_COLOR = '#B86139'
 
 function readStoredValue(key, fallback) {
   if (typeof window === 'undefined') {
@@ -413,7 +413,8 @@ function Dashboard() {
             <StateSelector value={selectedState} onChange={setSelectedState} />
             {stateSummary && (
               <div className="we-banner we-banner-subtle we-toolbar-summary">
-                <span>{stateSummary}</span>
+                <span className="we-summary-label">{selectedState}</span>
+                <span className="we-summary-copy">{stateSummary}</span>
               </div>
             )}
           </section>

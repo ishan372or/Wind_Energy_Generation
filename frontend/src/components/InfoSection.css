@@ -1,108 +1,145 @@
 .we-info-section {
-  background: linear-gradient(135deg, rgba(15, 118, 110, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
-  padding: 3rem 1.75rem;
-  margin: 2rem 0 0;
-  border-top: 1px solid rgba(20, 184, 166, 0.1);
+  position: relative;
+  padding: 3.5rem 1.75rem;
+  margin-top: 1.5rem;
+}
+
+.we-info-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid rgba(189, 169, 142, 0.45);
+  border-bottom: 1px solid rgba(189, 169, 142, 0.3);
+  background: linear-gradient(180deg, rgba(45, 91, 135, 0.04), rgba(184, 97, 57, 0.06));
+  pointer-events: none;
 }
 
 .we-info-container {
-  max-width: 1120px;
+  position: relative;
+  max-width: 1260px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .we-info-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
+  padding: 1.75rem;
+  border-radius: 1.6rem;
+  background: rgba(255, 250, 243, 0.76);
+  border: 1px solid rgba(189, 169, 142, 0.72);
+  box-shadow: var(--shadow-soft);
+}
+
+.we-info-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--accent-earth);
 }
 
 .we-info-header h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0f766e;
-  letter-spacing: -0.5px;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 600;
+  color: var(--text-dark);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
 .we-info-header p {
-  margin: 0 auto;
+  margin: 0;
   font-size: 1rem;
-  color: #64748b;
-  max-width: 500px;
+  color: var(--text-muted);
+  max-width: 36rem;
 }
 
 .we-info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.we-info-resource-block {
-  margin-top: 2.5rem;
-}
-
-.we-info-header-secondary {
-  margin-bottom: 1.75rem;
-}
-
-.we-info-resource-grid {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .we-info-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 1.75rem;
-  border-radius: 0.875rem;
-  border: 1px solid rgba(20, 184, 166, 0.2);
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.08);
-  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 250, 243, 0.84);
+  padding: 1.5rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(189, 169, 142, 0.68);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.we-info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-earth), var(--accent), var(--accent-sky));
+  opacity: 0.75;
 }
 
 .we-info-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.12);
-  border-color: rgba(20, 184, 166, 0.4);
+  box-shadow: 0 18px 28px rgba(70, 53, 35, 0.12);
+  border-color: var(--line-strong);
+}
+
+.we-info-card-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(15, 107, 102, 0.1);
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 800;
 }
 
 .we-info-card h3 {
-  margin: 0 0 0.75rem;
+  margin: 1rem 0 0.7rem;
   font-size: 1.1rem;
-  font-weight: 700;
-  color: #0f766e;
+  font-weight: 800;
+  color: var(--text-dark);
 }
 
 .we-info-card p {
   margin: 0;
-  font-size: 0.9rem;
-  color: #64748b;
-  line-height: 1.6;
+  font-size: 0.93rem;
+  color: var(--text-muted);
+  line-height: 1.7;
 }
 
-.we-info-resource-card {
-  text-align: left;
+@media (max-width: 900px) {
+  .we-info-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
   .we-info-section {
-    padding: 2rem 1rem;
+    padding: 2.5rem 1rem;
   }
 
-  .we-info-header h2 {
-    font-size: 1.4rem;
-  }
-
-  .we-info-header p {
-    font-size: 0.9rem;
+  .we-info-header {
+    padding: 1.25rem;
   }
 
   .we-info-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .we-info-resource-block {
-    margin-top: 2rem;
   }
 
   .we-info-card {

@@ -49,14 +49,15 @@ function ModelSelector({
     <>
       <div className="we-model-panel-header">
         <div>
-          <h2 className="we-panel-title">Model Family Clusters</h2>
+          <h2 className="we-panel-title">Model families</h2>
           <p className="we-panel-subtitle">
-            Collapse a family for one averaged line, or expand it to compare each model.
+            Collapse a family for the broader signal, or expand it to compare model
+            behavior line by line.
           </p>
         </div>
         <div className="we-model-panel-summary">
           <span>{enabledCount} enabled</span>
-          {loading && <span className="we-label-hint">Refreshing models...</span>}
+          {loading && <span className="we-label-hint">Refreshing list...</span>}
         </div>
       </div>
 
@@ -90,7 +91,7 @@ function ModelSelector({
       <div className="we-model-selector" id="models">
         <div className="we-mobile-model-bar">
           <div className="we-mobile-model-copy">
-            <span className="we-label">Model Families</span>
+            <span className="we-label">Model families</span>
             <span className="we-label-hint">{enabledCount} enabled</span>
           </div>
           <button
@@ -98,7 +99,7 @@ function ModelSelector({
             className="we-mobile-sheet-button"
             onClick={() => setIsSheetOpen(true)}
           >
-            Open clusters
+            Choose models
           </button>
         </div>
 
@@ -117,7 +118,7 @@ function ModelSelector({
             <div className="we-sheet-handle" />
             <div className="we-sheet-header">
               <h2 id="mobile-model-sheet-title" className="we-panel-title">
-                Model Family Clusters
+                Model families
               </h2>
               <button
                 type="button"

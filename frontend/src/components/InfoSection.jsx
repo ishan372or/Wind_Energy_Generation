@@ -3,24 +3,24 @@ import './InfoSection.css'
 function InfoSection() {
   const infoCards = [
     {
-      title: 'Real-Time Forecasting',
+      title: 'Start with the state picker',
       description:
-        'Advanced ML models predict wind energy generation with high accuracy, enabling better grid management and resource planning.',
+        'Choose a wind-heavy state to keep the chart focused. The view updates with actual generation and the enabled forecast lines.',
     },
     {
-      title: 'Top 10 States',
+      title: 'Collapse for the broader signal',
       description:
-        'Monitor wind energy production across the leading wind-generating states in the United States.',
+        'Keep families collapsed when you want the cleaner read. Each family becomes one dashed line that represents the group.',
     },
     {
-      title: 'Multiple Models',
+      title: 'Expand for model-by-model behavior',
       description:
-        'Compare predictions from different ML models to gain confidence in forecasts and validate predictions.',
+        'Open a family when you want to inspect how individual models separate, converge, or drift through the same months.',
     },
     {
-      title: 'Data-Driven Insights',
+      title: 'Read forecasts against reality',
       description:
-        'Leverage historical wind and weather data to understand patterns and optimize energy distribution.',
+        'The actual generation line stays visible so it is easier to judge seasonal fit, missed peaks, and spread between models.',
     },
   ]
 
@@ -28,18 +28,21 @@ function InfoSection() {
     <section className="we-info-section" id="documentation">
       <div className="we-info-container">
         <div className="we-info-header">
-          <h2>About This Dashboard</h2>
+          <span className="we-info-eyebrow">Reading notes</span>
+          <h2>Use the dashboard like a field guide, not a control panel.</h2>
           <p>
-            Harness the power of machine learning to understand and predict wind energy generation patterns
+            Start with a state, narrow the model families, and read the chart from actual
+            output outward.
           </p>
         </div>
 
         <div className="we-info-grid">
-          {infoCards.map((card) => (
-            <div key={card.title} className="we-info-card">
+          {infoCards.map((card, index) => (
+            <article key={card.title} className="we-info-card">
+              <span className="we-info-card-index">{String(index + 1).padStart(2, '0')}</span>
               <h3>{card.title}</h3>
               <p>{card.description}</p>
-            </div>
+            </article>
           ))}
         </div>
       </div>
