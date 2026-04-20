@@ -327,6 +327,20 @@
   color: var(--text-dark);
 }
 
+.we-cluster-heading {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.we-cluster-subtitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
 .we-cluster-expand-button {
   display: inline-flex;
   align-items: center;
@@ -398,6 +412,7 @@
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-dark);
+  line-height: 1.4;
 }
 
 .we-cluster-badge {

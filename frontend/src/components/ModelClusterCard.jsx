@@ -70,7 +70,12 @@ function ModelClusterCard({
               onChange={(event) => onToggleFamilyEnabled(familyName, event.target.checked)}
             />
             <span className="we-cluster-swatch" />
-            <span className="we-cluster-name">{familyName}</span>
+            <span className="we-cluster-heading">
+              <span className="we-cluster-name">{familyName}</span>
+              {family.subtitle && (
+                <span className="we-cluster-subtitle">{family.subtitle}</span>
+              )}
+            </span>
           </label>
 
           <button
@@ -95,6 +100,7 @@ function ModelClusterCard({
         <div className="we-cluster-models">
           {family.models.map((modelName) => {
             const hasData = availableModels.has(modelName)
+            const displayModelName = family.modelLabels?.[modelName] ?? modelName
 
             return (
               <label
@@ -107,7 +113,7 @@ function ModelClusterCard({
                     checked={Boolean(modelEnabled[modelName])}
                     onChange={() => onToggleModelEnabled(modelName)}
                   />
-                  <span className="we-cluster-model-name">{modelName}</span>
+                  <span className="we-cluster-model-name">{displayModelName}</span>
                 </span>
                 <span className="we-cluster-badge">
                   {formatAccuracyBadge(modelMetrics[modelName], hasData)}

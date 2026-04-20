@@ -7,6 +7,50 @@ export const DEFAULT_MODEL_FAMILIES = {
     color: '#C96B3B',
     models: ['ElasticNet'],
   },
+  'Deep Learning (Chronos)': {
+    color: '#7C3AED',
+    models: [
+      'Chronos-2016',
+      'Chronos-2018',
+      'Chronos-2020',
+      'Chronos-2022',
+      'Chronos-2023',
+    ],
+  },
+}
+
+const CHRONOS_MODEL_LABELS = {
+  'Chronos-2016': 'Chronos (trained up to 2016)',
+  'Chronos-2018': 'Chronos (trained up to 2018)',
+  'Chronos-2020': 'Chronos (trained up to 2020)',
+  'Chronos-2022': 'Chronos (trained up to 2022)',
+  'Chronos-2023': 'Chronos (trained up to 2023)',
+}
+
+const FAMILY_UI_OVERRIDES = {
+  'Deep Learning (Chronos)': {
+    subtitle: 'Models trained on data available up to different years',
+    modelLabels: CHRONOS_MODEL_LABELS,
+  },
+}
+
+export const DEFAULT_CLUSTER_UI_STATE = {
+  expandedFamilies: {
+    'Gradient Boost': true,
+    'Linear Models': false,
+    'Deep Learning (Chronos)': false,
+  },
+  modelEnabled: {
+    XGBoost: true,
+    LightGBM: true,
+    CatBoost: true,
+    ElasticNet: true,
+    'Chronos-2016': false,
+    'Chronos-2018': false,
+    'Chronos-2020': false,
+    'Chronos-2022': false,
+    'Chronos-2023': false,
+  },
 }
 
 export const STORAGE_KEYS = {
@@ -75,28 +119,53 @@ function normalizeModelFamilies(modelFamilies) {
       .filter((family) => family && typeof family === 'object' && family.name)
       .map((family, index) => [
         family.name,
-        {
-          color:
-            family.color ||
-            DEFAULT_FAMILY_COLORS[index % DEFAULT_FAMILY_COLORS.length],
-          models: Array.isArray(family.models) ? family.models.filter(Boolean) : [],
-        },
+        buildFamilyConfig(
+          family.name,
+          family,
+          DEFAULT_FAMILY_COLORS[index % DEFAULT_FAMILY_COLORS.length],
+        ),
       ])
   }
 
-  return Object.entries(modelFamilies ?? {})
+  return Object.entries(modelFamilies ?? {}).map(([familyName, family], index) => [
+    familyName,
+    buildFamilyConfig(
+      familyName,
+      family,
+      DEFAULT_FAMILY_COLORS[index % DEFAULT_FAMILY_COLORS.length],
+    ),
+  ])
+}
+
+function buildFamilyConfig(familyName, family, fallbackColor) {
+  const override = FAMILY_UI_OVERRIDES[familyName] ?? {}
+
+  return {
+    color: family?.color || fallbackColor,
+    models: Array.isArray(family?.models) ? family.models.filter(Boolean) : [],
+    subtitle: family?.subtitle || override.subtitle || '',
+    modelLabels: {
+      ...(override.modelLabels ?? {}),
+      ...(family?.modelLabels ?? {}),
+    },
+  }
 }
 
 export function ensureUiStateIntegrity(modelFamilies, uiState = {}) {
   const nextExpandedFamilies = {}
   const nextModelEnabled = {}
 
-  Object.entries(modelFamilies).forEach(([familyName, family], index) => {
+  Object.entries(modelFamilies).forEach(([familyName, family]) => {
     nextExpandedFamilies[familyName] =
-      uiState.expandedFamilies?.[familyName] ?? index === 0
+      uiState.expandedFamilies?.[familyName] ??
+      DEFAULT_CLUSTER_UI_STATE.expandedFamilies?.[familyName] ??
+      false
 
     family.models.forEach((modelName) => {
-      nextModelEnabled[modelName] = uiState.modelEnabled?.[modelName] ?? true
+      nextModelEnabled[modelName] =
+        uiState.modelEnabled?.[modelName] ??
+        DEFAULT_CLUSTER_UI_STATE.modelEnabled?.[modelName] ??
+        true
     })
   })
 
@@ -123,6 +192,8 @@ export function resolveModelFamilies(availableModels, configuredFamilies = DEFAU
           models: Array.from(new Set(familyModels)).filter((modelName) =>
             availableModelSet.has(modelName),
           ),
+          subtitle: family.subtitle || '',
+          modelLabels: family.modelLabels ?? {},
         },
       ]
     })

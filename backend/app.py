@@ -30,6 +30,17 @@ MODEL_FAMILIES = [
         "color": "#C96B3B",
         "models": ["ElasticNet"],
     },
+    {
+        "name": "Deep Learning (Chronos)",
+        "color": "#7C3AED",
+        "models": [
+            "Chronos-2016",
+            "Chronos-2018",
+            "Chronos-2020",
+            "Chronos-2022",
+            "Chronos-2023",
+        ],
+    },
 ]
 MODELS = [model for family in MODEL_FAMILIES for model in family["models"]]
         
