@@ -3,6 +3,7 @@ import Header from '../components/Header.jsx'
 import StateSelector from '../components/StateSelector.jsx'
 import ModelSelector from '../components/ModelSelector.jsx'
 import PredictionChart from '../components/PredictionChart.jsx'
+import ModelComparisonTable from '../components/ModelComparisonTable.jsx'
 import InfoSection from '../components/InfoSection.jsx'
 import Footer from '../components/Footer.jsx'
 import { getModels, getPredictions } from '../api/client.js'
@@ -449,6 +450,10 @@ function Dashboard() {
                 isLoading={predictionsLoading}
                 hasSelection={hasSelection}
                 lineWarning={lineWarning}
+              />
+              <ModelComparisonTable
+                modelMetrics={modelMetrics}
+                modelFamilies={modelFamilies}
               />
             </section>
           </section>
