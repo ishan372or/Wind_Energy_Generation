@@ -132,8 +132,6 @@ The **2022 cutoff** provided:
 ## Future Work
 
 - Extend to Indian wind energy forecasting when data improves  
-- Incorporate deep learning architectures (e.g., Transformers, LSTMs)  
-- Add probabilistic forecasting (uncertainty estimation)  
-- Improve feature engineering with spatial correlations  
+- Incorporate deep learning architectures (e.g., Transformers, LSTMs)
 
 ---
